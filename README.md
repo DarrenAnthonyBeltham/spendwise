@@ -1,75 +1,30 @@
-# React + TypeScript + Vite
+# SpendWise 💸
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SpendWise is a modern, front-end personal finance dashboard designed to help you track your income and expenses. It provides a clean visual overview of your spending habits with interactive charts and filtering, all while running entirely in your browser. All data is saved locally to your browser's `localStorage`.
 
-Currently, two official plugins are available:
+## Key Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+* **Log Transactions:** Easily add income or expense transactions with an amount, date, and category.
+* **Dynamic Categories:** Add your own custom categories, which are saved and become available in all dropdowns.
+* **Interactive Charts:**
+    * **Expenses by Category:** A pie chart showing the percentage breakdown of your expenses.
+    * **Income vs. Expense:** A bar chart comparing your total income against your total expenses.
+* **Data Persistence:** All transactions and custom categories are saved in your browser's `localStorage`, so your data is waiting for you when you return.
+* **Advanced Filtering:**
+    * Filter transactions by any category.
+    * Filter transactions by a custom date range using a beautiful, integrated calendar.
+* **Transaction History:** A clear, sortable table of all your filtered transactions.
+* **Responsive Design:** A modern, dark-themed UI that works beautifully on both desktop and mobile devices.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+This project is built 100% on the front-end using a modern web stack:
 
-Note: This will impact Vite dev & build performances.
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* **Framework:** [React](https://reactjs.org/)
+* **Language:** [TypeScript](https://www.typescriptlang.org/)
+* **Build Tool:** [Vite](https://vitejs.dev/)
+* **Styling:** [Tailwind CSS v4 (alpha)](https://tailwindcss.com/)
+* **UI Components:** [Headless UI](https://headlessui.com/) (for accessible, custom dropdowns and date pickers)
+* **Charts:** [Recharts](https://recharts.org/)
+* **Date Management:** [date-fns](https://date-fns.org/)
+* **Icons:** [Heroicons](https://heroicons.com/)
