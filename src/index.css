@@ -33,3 +33,8 @@
   scrollbar-width: thin;
   scrollbar-color: #475569 #1e293b;
 }
+
+nav .active {
+  background-color: #0284c7; 
+  color: white;
+}

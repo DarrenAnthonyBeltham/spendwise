@@ -11,19 +11,15 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts';
-import type { Transaction } from '../App';
+import type { Transaction } from '../types';
+import { formatCurrency } from '../lib/helpers';
 
 interface SummaryChartsProps {
   transactions: Transaction[];
 }
 
 const COLORS = [
-  '#0088FE',
-  '#00C49F',
-  '#FFBB28',
-  '#FF8042',
-  '#8884D8',
-  '#E36397',
+  '#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#E36397',
 ];
 
 const SummaryCharts = ({ transactions }: SummaryChartsProps) => {
@@ -32,8 +28,10 @@ const SummaryCharts = ({ transactions }: SummaryChartsProps) => {
     transactions
       .filter((tx) => tx.type === 'expense')
       .forEach((tx) => {
-        const currentAmount = expenseMap.get(tx.category) || 0;
-        expenseMap.set(tx.category, currentAmount + tx.amount);
+        tx.splits.forEach(split => {
+          const currentAmount = expenseMap.get(split.category) || 0;
+          expenseMap.set(split.category, currentAmount + split.amount);
+        });
       });
     return Array.from(expenseMap, ([name, value]) => ({ name, value }));
   }, [transactions]);
@@ -42,9 +40,9 @@ const SummaryCharts = ({ transactions }: SummaryChartsProps) => {
     const totals = transactions.reduce(
       (acc, tx) => {
         if (tx.type === 'income') {
-          acc.income += tx.amount;
+          acc.income += tx.totalAmount; 
         } else {
-          acc.expense += tx.amount;
+          acc.expense += tx.totalAmount;
         }
         return acc;
       },
@@ -67,26 +65,16 @@ const SummaryCharts = ({ transactions }: SummaryChartsProps) => {
             <PieChart>
               <Pie
                 data={expenseData}
-                cx="50%"
-                cy="50%"
-                labelLine={false}
-                outerRadius={110}
-                fill="#8884d8"
-                dataKey="value"
+                cx="50%" cy="50%" labelLine={false} outerRadius={110} fill="#8884d8" dataKey="value"
               >
                 {expenseData.map((_entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{
-                  backgroundColor: '#1e293b',
-                  borderColor: '#334155',
-                }}
+                contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }}
                 itemStyle={{ color: '#f1f5f9' }}
+                formatter={(value: number) => formatCurrency(value)}
               />
               <Legend wrapperStyle={{ color: '#f1f5f9' }} />
             </PieChart>
@@ -105,13 +93,11 @@ const SummaryCharts = ({ transactions }: SummaryChartsProps) => {
         <ResponsiveContainer width="100%" height={300}>
           <BarChart data={incomeVsExpenseData} margin={{ top: 5, right: 20, left: -10, bottom: 5 }}>
             <XAxis dataKey="name" stroke="#94a3b8" />
-            <YAxis stroke="#94a3b8" />
+            <YAxis stroke="#94a3b8" tickFormatter={(val) => formatCurrency(val)} />
             <Tooltip
-              contentStyle={{
-                backgroundColor: '#1e293b',
-                borderColor: '#334155',
-              }}
+              contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }}
               itemStyle={{ color: '#f1f5f9' }}
+              formatter={(value: number) => formatCurrency(value)}
             />
             <Legend wrapperStyle={{ color: '#f1f5f9' }} />
             <Bar dataKey="value" fill="#8884d8">
