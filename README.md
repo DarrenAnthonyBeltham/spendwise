@@ -28,37 +28,3 @@ This project is built 100% on the front-end using a modern web stack:
 * **Charts:** [Recharts](https://recharts.org/)
 * **Date Management:** [date-fns](https://date-fns.org/)
 * **Icons:** [Heroicons](https://heroicons.com/)
-
-## Getting Started
-
-To get a local copy up and running, follow these simple steps.
-
-### Prerequisites
-
-You must have [Node.js](https://nodejs.org/) (which includes `npm`) installed on your computer.
-
-### Installation
-
-1.  Clone the repository to your local machine:
-    ```sh
-    git clone [https://github.com/your-username/spendwise.git](https://github.com/your-username/spendwise.git)
-    cd spendwise
-    ```
-
-2.  Install all the required `npm` packages:
-    ```sh
-    npm install
-    ```
-
-3.  Install the specific dependencies we used for this project:
-    ```sh
-    npm install recharts @headlessui/react @heroicons/react date-fns
-    npm install @types/recharts --save-dev
-    ```
-
-### Running the App
-
-Once installation is complete, you can start the local development server:
-
-```sh
-npm run dev
