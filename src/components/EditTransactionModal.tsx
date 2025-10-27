@@ -12,9 +12,9 @@ interface EditTransactionModalProps {
 
 export default function EditTransactionModal({ isOpen, onClose, transaction }: EditTransactionModalProps) {
   const { updateTransaction, accounts, categories } = useAppOutletContext();
-  
+
   const initialSplit = transaction.splits[0] || { category: '', amount: 0 };
-  
+
   const [amount, setAmount] = useState(initialSplit.amount.toString());
   const [date, setDate] = useState(transaction.date);
   const [accountId, setAccountId] = useState(transaction.accountId);
@@ -24,6 +24,7 @@ export default function EditTransactionModal({ isOpen, onClose, transaction }: E
   const [notes, setNotes] = useState(transaction.notes || '');
 
   const accountMap = new Map(accounts.map((a: Account) => [a.id, a.name]));
+  const categoryNameList = categories.map(c => c.name);
 
   useEffect(() => {
     const split = transaction.splits[0] || { category: '', amount: 0 };
@@ -43,7 +44,7 @@ export default function EditTransactionModal({ isOpen, onClose, transaction }: E
       alert('Please fill out all fields with valid data.');
       return;
     }
-    
+
     const updatedSplits: TransactionSplit[] = [{ category, amount: numericAmount }];
 
     updateTransaction({
@@ -61,30 +62,30 @@ export default function EditTransactionModal({ isOpen, onClose, transaction }: E
 
   return (
     <Transition appear show={isOpen} as={Fragment}>
-      <Dialog as="div" className="relative z-10" onClose={onClose}>
+      <Dialog as="div" className="relative z-50" onClose={onClose}>
         <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0" enterTo="opacity-100" leave="ease-in duration-200" leaveFrom="opacity-100" leaveTo="opacity-0">
-          <div className="fixed inset-0 bg-black/50" />
+          <div className="fixed inset-0 bg-black/50 dark:bg-black/70" />
         </Transition.Child>
         <div className="fixed inset-0 overflow-y-auto">
           <div className="flex min-h-full items-center justify-center p-4 text-center">
             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 scale-95" enterTo="opacity-100 scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 scale-100" leaveTo="opacity-0 scale-95">
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-slate-800 p-6 text-left align-middle shadow-xl transition-all">
-                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-white">Edit Transaction</Dialog.Title>
+              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-slate-900 dark:text-white">Edit Transaction</Dialog.Title>
                 <form onSubmit={handleSubmit} className="mt-4 space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label htmlFor="amount" className="block text-sm font-medium text-slate-300">Amount</label><input type="number" id="amount" value={amount} onChange={(e) => setAmount(e.target.value)} className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white" required /></div>
-                    <div><label htmlFor="date" className="block text-sm font-medium text-slate-300">Date</label><input type="date" id="date" value={date} onChange={(e) => setDate(e.target.value)} className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white" required /></div>
+                    <div><label htmlFor="amount-edit" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Amount</label><input type="number" id="amount-edit" value={amount} onChange={(e) => setAmount(e.target.value)} required className="mt-1 block w-full bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-slate-900 dark:text-white"/></div>
+                    <div><label htmlFor="date-edit" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Date</label><input type="date" id="date-edit" value={date} onChange={(e) => setDate(e.target.value)} required className="mt-1 block w-full bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-slate-900 dark:text-white"/></div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div><label htmlFor="account" className="block text-sm font-medium text-slate-300">Account</label><CustomSelect value={accountMap.get(accountId) || ''} onChange={(val) => { const id = accounts.find((a: Account) => a.name === val)?.id || ''; setAccountId(id); }} options={accounts.map((a: Account) => a.name)} placeholder="Select Account" /></div>
-                    <div><label htmlFor="category" className="block text-sm font-medium text-slate-300">Category</label><CustomSelect value={category} onChange={(val) => setCategory(val || '')} options={categories} placeholder="Select Category" /></div>
+                    <div><label htmlFor="account-edit" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Account</label><CustomSelect value={accountMap.get(accountId) || ''} onChange={(val) => { const id = accounts.find((a: Account) => a.name === val)?.id || ''; setAccountId(id); }} options={accounts.map((a: Account) => a.name)} placeholder="Select Account" /></div>
+                    <div><label htmlFor="category-edit" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Category</label><CustomSelect value={category} onChange={(val) => setCategory(val || '')} options={categoryNameList} placeholder="Select Category" /></div>
                   </div>
-                  <div><label htmlFor="type" className="block text-sm font-medium text-slate-300">Type</label><CustomSelect value={type} onChange={(val) => setType((val as 'income' | 'expense') || 'expense')} options={['expense', 'income']} /></div>
-                  <div><label htmlFor="tags-edit" className="block text-sm font-medium text-slate-300">Tags</label><input type="text" id="tags-edit" value={tags} onChange={(e) => setTags(e.target.value)} className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white"/></div>
-                  <div><label htmlFor="notes-edit" className="block text-sm font-medium text-slate-300">Notes</label><textarea id="notes-edit" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="mt-1 block w-full bg-slate-700 border-slate-600 rounded-md shadow-sm py-2 px-3 text-white"></textarea></div>
+                  <div><label htmlFor="type-edit" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Type</label><CustomSelect value={type} onChange={(val) => setType((val as 'income' | 'expense') || 'expense')} options={['expense', 'income']} /></div>
+                  <div><label htmlFor="tags-edit" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Tags</label><input type="text" id="tags-edit" value={tags} onChange={(e) => setTags(e.target.value)} className="mt-1 block w-full bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-slate-900 dark:text-white"/></div>
+                  <div><label htmlFor="notes-edit" className="block text-sm font-medium text-slate-700 dark:text-slate-300">Notes</label><textarea id="notes-edit" value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} className="mt-1 block w-full bg-slate-100 dark:bg-slate-700 border-slate-300 dark:border-slate-600 rounded-md py-2 px-3 text-slate-900 dark:text-white"></textarea></div>
                    <div className="mt-4 flex justify-end gap-2">
-                     <button type="button" className="inline-flex justify-center rounded-md border border-transparent bg-slate-700 px-4 py-2 text-sm font-medium text-slate-100 hover:bg-slate-600" onClick={onClose}>Cancel</button>
-                     <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700">Save Changes</button>
+                     <button type="button" className="inline-flex justify-center rounded-md border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800" onClick={onClose}>Cancel</button>
+                     <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2 dark:focus:ring-offset-slate-800">Save Changes</button>
                    </div>
                 </form>
               </Dialog.Panel>

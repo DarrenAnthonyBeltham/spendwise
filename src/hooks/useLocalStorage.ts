@@ -10,19 +10,12 @@ function getValue<T>(key: string, initialValue: T | (() => T)): T {
       localStorage.removeItem(key);
     }
   }
-
-  if (typeof initialValue === 'function') {
-    return (initialValue as () => T)();
-  }
+  if (typeof initialValue === 'function') { return (initialValue as () => T)(); }
   return initialValue;
 }
 
 export function useLocalStorage<T>(key: string, initialValue: T | (() => T)) {
   const [value, setValue] = useState<T>(() => getValue(key, initialValue));
-
-  useEffect(() => {
-    localStorage.setItem(key, JSON.stringify(value));
-  }, [value, key]);
-
+  useEffect(() => { localStorage.setItem(key, JSON.stringify(value)); }, [value, key]);
   return [value, setValue] as const;
 }
